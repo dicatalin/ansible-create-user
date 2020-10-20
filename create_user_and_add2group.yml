@@ -1,0 +1,18 @@
+---
+
+- name: Create user, force user to change password and add to group
+  hosts: all
+  vars:
+   username: user_name	#put your desired username
+   group: user_group
+  tasks:
+  - name: Create a user with hashed password
+    user:
+     name: "{{ username }}"
+     password: password_hash	#put hash for your desired initial password, see readme
+     groups: "{{ group }}"
+     append: yes
+  - name: Password expiring in 90 days for user "{{ username }}"
+    shell: chage -M 90 "{{ username }}"
+  - name: Force user "{{ username }}" to change password at first logon
+    shell: chage -d 0 "{{ username }}"
