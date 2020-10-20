@@ -1,0 +1,15 @@
+---
+
+- name: Create user and set a one time usage password
+  hosts: all
+  vars:
+   username: user_name	#put your desired username
+  tasks:
+  - name: Create a user with hashed password
+    user:
+     name: "{{ username }}"
+     password: password_hash	#put hash for your desired initial password, see readme
+  - name: Password expiring in 90 days for user "{{ username }}"
+    shell: chage -M 90 "{{ username }}"
+  - name: Force user "{{ username }}" to change password at first logon
+    shell: chage -d 0 "{{ username }}"
